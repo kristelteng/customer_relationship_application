@@ -18,7 +18,6 @@ class CRM
     puts "[5] Display an attribute"
     puts "[6] Delete a contact"
     puts "[7] Exit"
-    puts "[8] Modify a contact by name"
     puts "Enter a number:"
   end
 
@@ -31,8 +30,6 @@ class CRM
   end
 
   def main_menu
-    puts "Welcome to #{@name}"
-
     while true
       print_main_menu
       input = gets.chomp.to_i
@@ -49,7 +46,6 @@ class CRM
     when 4 then display_contact
     when 5 then display_attribute
     when 6 then delete_contact
-    when 8 then modify_contact_by_name
     else
       puts "Invalid option. Try again!"
       return
@@ -75,8 +71,49 @@ class CRM
     end
   puts
   end
+
+  def modify(contact)    
+    if contact == nil
+      puts "No such contact!"
+      return
+    end
   
-  # modify contact by id
+    puts "Please confirm changes for: "
+    puts contact.to_s
+    puts "yes or no"
+    results = gets.chomp
+
+    if results == "yes"
+      print_modify_menu
+      puts ""
+      
+      puts "Enter a number: "
+      number = gets.chomp.to_i
+      puts "Enter a value: "
+      value = gets.chomp
+      case number
+      when 1
+        # change last name
+        # need to modify index
+        old_last_name = contact.last_name
+        contact.last_name = value
+        @rolodex.modify_index(old_last_name, contact.first_name, contact)
+      when 2
+        # change last name
+        # need to modify index
+        old_first_name = contact.last_name
+        contact.first_name = value
+        @rolodex.modify_index(contact.last_name, old_first_name, contact)
+      when 3
+        contact.email = value
+      when 4
+        contact.note = value
+      end
+      puts "Modified contact to: #{contact.to_s}"
+    end
+  end
+
+    # modify contact by id
   def modify_contact
      # prompt user for id
     puts "What id to modify?"
@@ -85,59 +122,6 @@ class CRM
     contact = @rolodex.get_contact_by_id(id)
     # call modify
     modify(contact)
-  end
-
-  # modify contact by name
-  def modify_contact_by_name
-      print "First Name: "
-      first_name = gets.chomp
-      print "Last Name: "
-      last_name = gets.chomp
-      puts ""
-      #display contact info to modify
-      contact = @rolodex.get_contact_by_name(last_name, first_name)
-      modify(contact)
-  end 
-
-  def modify(contact)    
-      if contact == nil
-        puts "No such contact!"
-        return
-      end
-    
-      puts "Please confirm changes for: "
-      puts contact.to_s
-      puts "yes or no"
-      results = gets.chomp
-
-      if results == "yes"
-        print_modify_menu
-        puts ""
-        
-        puts "Enter a number: "
-        number = gets.chomp.to_i
-        puts "Enter a value: "
-        value = gets.chomp
-        case number
-        when 1
-          # change last name
-          # need to modify index
-          old_last_name = contact.last_name
-          contact.last_name = value
-          @rolodex.modify_index(old_last_name, contact.first_name, contact)
-        when 2
-          # change last name
-          # need to modify index
-          old_first_name = contact.last_name
-          contact.first_name = value
-          @rolodex.modify_index(contact.last_name, old_first_name, contact)
-        when 3
-          contact.email = value
-        when 4
-          contact.note = value
-        end
-        puts "Modified contact to: #{contact.to_s}"
-      end
   end
   
   def display_contact
